@@ -8,6 +8,20 @@
     <script src="{{ url_for('static', filename='js/dom.js') }}" defer></script>
 </head>
 <body>
- <h1>Game</h1>
+    <div class="game-board">
+        {% for row in range(19) %}
+        <div class="row">
+
+            {% for col in range(36) %}
+            <div>
+                <div class="board-cell"
+                    data-coordinate-x="{{ col }}"
+                    data-coordinate-y="{{ row }}">
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
 </body>
 </html>

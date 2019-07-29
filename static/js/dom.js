@@ -1,3 +1,20 @@
+function placeApple() {
+    let cordAppleX = Math.floor(Math.random() * 36);
+    let cordAppleY = Math.floor(Math.random() * 19);
+    let cordApple = {x: cordAppleX, y: cordAppleY}
+    let gameBoard = document.querySelectorAll('.board-cell');
+
+    for (let gameCell of gameBoard) {
+        let cordY = parseInt(gameCell.dataset.coordinateY);
+        let cordX = parseInt(gameCell.dataset.coordinateX);
+        if (cordY === cordAppleY && cordX === cordAppleX) {
+            gameCell.classList.add("apple")
+        }
+    }
+    return cordApple
+}
+
+
 function controls() {
     let snakeAdd = {x: 17, y: 9};
     let snakeDel = {x: 16, y: 8};
@@ -62,6 +79,7 @@ function getCoordinates(snakeAddX, snakeAddY, snakeDelX, snakeDelY) {
 
 
 function game() {
+    let cordApple = placeApple();
     let snakeAdd = controls()[0];
     let snakeDel = controls()[1];
     getCoordinates(snakeAdd.x, snakeAdd.y, snakeDel.x, snakeDel.y);

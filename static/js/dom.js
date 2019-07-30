@@ -21,11 +21,11 @@ function placeApple() {
 }
 
 
-function controls() {
-    let snakeAdd = {x: 17, y: 9};
-    let snakeDel = {x: 16, y: 8};
+function controls(direction) {
+    let snakeAdd = [{x: 17, y: 9}, {x: 16, y: 9}];
+    let snakeDel = [{x: 16, y: 8}, {x: 0, y: 0}];
 
-    var arrowKeys = {
+    let arrowKeys = {
         left: 37,
         up: 38,
         right: 39,
@@ -35,29 +35,40 @@ function controls() {
     document.onkeydown = function () {
 
         switch (window.event.keyCode) {
-
             case arrowKeys.left:
-                snakeDel.x = snakeAdd.x;
-                snakeDel.y = snakeAdd.y;
-                snakeAdd.x -= 1;
+                if (direction === 'right'){
+                    break;
+                }
+                direction = 'left';
+                snakeDel = changeDelCoordinates(snakeAdd,snakeDel);
+                snakeAdd = changeSnakeCoordinates(snakeAdd, direction);
                 getCoordinates(snakeAdd, snakeDel);
                 break;
             case arrowKeys.up:
-                snakeDel.x = snakeAdd.x;
-                snakeDel.y = snakeAdd.y;
-                snakeAdd.y -= 1;
+                if (direction === 'down'){
+                    break;
+                }
+                direction = 'up';
+                snakeDel = changeDelCoordinates(snakeAdd,snakeDel);
+                snakeAdd = changeSnakeCoordinates(snakeAdd, 'up');
                 getCoordinates(snakeAdd, snakeDel);
                 break;
             case arrowKeys.right:
-                snakeDel.x = snakeAdd.x;
-                snakeDel.y = snakeAdd.y;
-                snakeAdd.x += 1;
+                if (direction === 'left'){
+                    break;
+                }
+                direction = 'right';
+                snakeDel = changeDelCoordinates(snakeAdd,snakeDel);
+                snakeAdd = changeSnakeCoordinates(snakeAdd, 'right');
                 getCoordinates(snakeAdd, snakeDel);
                 break;
             case arrowKeys.down:
-                snakeDel.x = snakeAdd.x;
-                snakeDel.y = snakeAdd.y;
-                snakeAdd.y += 1;
+                if (direction === 'up'){
+                    break;
+                }
+                direction = 'down';
+                snakeDel = changeDelCoordinates(snakeAdd,snakeDel);
+                snakeAdd = changeSnakeCoordinates(snakeAdd, 'down');
                 getCoordinates(snakeAdd, snakeDel);
                 break;
         }
@@ -66,6 +77,28 @@ function controls() {
 }
 
 
+function changeSnakeCoordinates(snake, direction){
+    let snakeFirstElement = snake[0];
+    if (direction === 'left'){
+        snake.unshift({x: snakeFirstElement.x -1, y: snakeFirstElement.y});
+    } else if (direction === 'up'){
+        snake.unshift({x: snakeFirstElement.x, y: snakeFirstElement.y -1});
+    } else if (direction === 'right'){
+        snake.unshift({x: snakeFirstElement.x + 1, y: snakeFirstElement.y});
+    } else {
+        snake.unshift({x: snakeFirstElement.x, y: snakeFirstElement.y + 1});
+    }
+    snake.pop();
+    return snake;
+}
+
+function changeDelCoordinates(snake, snakeDel) {
+    for (let coordIdx = 0; coordIdx < snake.length; coordIdx ++){
+        snakeDel[coordIdx].x = snake[coordIdx].x;
+        snakeDel[coordIdx].y = snake[coordIdx].y;
+    }
+    return snakeDel;
+}
 
 function getCoordinates(snakeAdd, snakeDel) {
     let gameBoard = document.querySelectorAll('.board-cell');
@@ -73,13 +106,15 @@ function getCoordinates(snakeAdd, snakeDel) {
     for (let gameCell of gameBoard) {
         let cordY = parseInt(gameCell.dataset.coordinateY);
         let cordX = parseInt(gameCell.dataset.coordinateX);
-        let cordCell = {x: cordX, y: cordY}
+        let cordCell = {x: cordX, y: cordY};
         gameCell.textContent = cordY + ',' + cordX;
-        if (cordX === snakeAdd.x && cordY === snakeAdd.y) {
-            gameCell.classList.add("snake")
-        }
-        if (cordX === snakeDel.x && cordY === snakeDel.y){
-            gameCell.classList.remove("snake")
+        for ( let coordIdx = 0; coordIdx < snakeAdd.length; coordIdx ++) {
+            if (cordX === snakeAdd[coordIdx].x && cordY === snakeAdd[coordIdx].y) {
+                gameCell.classList.add("snake")
+            }
+            if (cordX === snakeDel[coordIdx].x && cordY === snakeDel[coordIdx].y) {
+                gameCell.classList.remove("snake")
+            }
         }
         checkHitApple(gameCell);
     }
@@ -87,9 +122,10 @@ function getCoordinates(snakeAdd, snakeDel) {
 
 
 function game() {
+    let direction = '';
     let cordApple = placeApple();
-    let snakeAdd = controls()[0];
-    let snakeDel = controls()[1];
+    let snakeAdd = controls(direction)[0];
+    let snakeDel = controls(direction)[1];
     getCoordinates(snakeAdd, snakeDel);
 
 

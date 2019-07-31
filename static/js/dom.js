@@ -19,14 +19,14 @@ function checkHitApple(gameCell) {
 
 function increaseSnakeLength() {
     let snakeLastElement = snakeAdd[snakeAdd.length - 1];
-    if (direction === 'left'){
+    if (direction === 'left') {
         snakeAdd.push({x: snakeLastElement.x + 1, y: snakeLastElement.y});
-    } else if (direction === 'up'){
+    } else if (direction === 'up') {
         snakeAdd.push({x: snakeLastElement.x, y: snakeLastElement.y + 1});
-    } else if (direction === 'right'){
-        snakeAdd.push({x: snakeLastElement.x -1, y: snakeLastElement.y});
+    } else if (direction === 'right') {
+        snakeAdd.push({x: snakeLastElement.x - 1, y: snakeLastElement.y});
     } else {
-        snakeAdd.push({x: snakeLastElement.x, y: snakeLastElement.y -1});
+        snakeAdd.push({x: snakeLastElement.x, y: snakeLastElement.y - 1});
     }
     snakeDel.push({x: 0, y: 0});
 }
@@ -62,13 +62,10 @@ function controls() {
         switch (window.event.keyCode) {
 
             case arrowKeys.left:
-                clearInterval(moveRight);
-                clearInterval(moveLeft);
-                clearInterval(moveDown);
-                clearInterval(moveUp);
-                if (direction === 'right'){
+                if (direction === 'right') {
                     break;
                 }
+                stopMovement();
                 direction = 'left';
                 changeDelCoordinates();
                 moveLeft = setInterval(changeSnakeCoordinates, 100);
@@ -76,65 +73,59 @@ function controls() {
                 break;
 
             case arrowKeys.up:
-                clearInterval(moveRight);
-                clearInterval(moveLeft);
-                clearInterval(moveDown);
-                clearInterval(moveUp);
-                if (direction === 'down'){
+                if (direction === 'down') {
                     break;
                 }
+                stopMovement();
                 direction = 'up';
                 changeDelCoordinates();
                 moveUp = setInterval(changeSnakeCoordinates, 100);
                 setInterval(changeDelCoordinates, 100);
                 break;
-                
+
             case arrowKeys.right:
-                clearInterval(moveRight);
-                clearInterval(moveLeft);
-                clearInterval(moveDown);
-                clearInterval(moveUp);
-                if (direction === 'left'){
+                if (direction === 'left') {
                     break;
                 }
+                stopMovement();
                 direction = 'right';
                 changeDelCoordinates();
                 moveRight = setInterval(changeSnakeCoordinates, 100);
                 setInterval(changeDelCoordinates, 100);
                 break;
-                
+
             case arrowKeys.down:
-                clearInterval(moveRight);
-                clearInterval(moveLeft);
-                clearInterval(moveDown);
-                clearInterval(moveUp);
-                if (direction === 'up'){
+                if (direction === 'up') {
                     break;
                 }
+                stopMovement();
                 direction = 'down';
                 changeDelCoordinates();
                 moveDown = setInterval(changeSnakeCoordinates, 100);
                 setInterval(changeDelCoordinates, 100);
                 break;
-                
+
             case arrowKeys.space:
-                clearInterval(moveRight);
-                clearInterval(moveLeft);
-                clearInterval(moveDown);
-                clearInterval(moveUp);
+                stopMovement();
         }
     };
 }
 
+function stopMovement() {
+    clearInterval(moveRight);
+    clearInterval(moveLeft);
+    clearInterval(moveDown);
+    clearInterval(moveUp);
+}
 
-function changeSnakeCoordinates(){
+function changeSnakeCoordinates() {
     let snakeFirstElement = snakeAdd[0];
     console.log(snakeFirstElement)
-    if (direction === 'left'){
-        snakeAdd.unshift({x: snakeFirstElement.x -1, y: snakeFirstElement.y});
-    } else if (direction === 'up'){
-        snakeAdd.unshift({x: snakeFirstElement.x, y: snakeFirstElement.y -1});
-    } else if (direction === 'right'){
+    if (direction === 'left') {
+        snakeAdd.unshift({x: snakeFirstElement.x - 1, y: snakeFirstElement.y});
+    } else if (direction === 'up') {
+        snakeAdd.unshift({x: snakeFirstElement.x, y: snakeFirstElement.y - 1});
+    } else if (direction === 'right') {
         snakeAdd.unshift({x: snakeFirstElement.x + 1, y: snakeFirstElement.y});
     } else {
         snakeAdd.unshift({x: snakeFirstElement.x, y: snakeFirstElement.y + 1});
@@ -144,7 +135,7 @@ function changeSnakeCoordinates(){
 }
 
 function changeDelCoordinates() {
-    for (let coordIdx = 0; coordIdx < snakeAdd.length; coordIdx ++){
+    for (let coordIdx = 0; coordIdx < snakeAdd.length; coordIdx++) {
         snakeDel[coordIdx].x = snakeAdd[coordIdx].x;
         snakeDel[coordIdx].y = snakeAdd[coordIdx].y;
     }
@@ -157,7 +148,7 @@ function getCoordinates() {
         let cordY = parseInt(gameCell.dataset.coordinateY);
         let cordX = parseInt(gameCell.dataset.coordinateX);
         gameCell.textContent = cordY + ',' + cordX;
-        
+
         if (snakeAdd[0].x > 35) {
             snakeAdd[0].x = 0;
         }
@@ -170,7 +161,7 @@ function getCoordinates() {
         if (snakeAdd[0].y < 0) {
             snakeAdd[0].y = 18;
         }
-        
+
         for (let coordIdx = 0; coordIdx < snakeAdd.length; coordIdx++) {
             if (cordX === snakeAdd[coordIdx].x && cordY === snakeAdd[coordIdx].y) {
                 gameCell.classList.add("snake")
@@ -178,19 +169,19 @@ function getCoordinates() {
             if (cordX === snakeDel[coordIdx].x && cordY === snakeDel[coordIdx].y) {
                 gameCell.classList.remove("snake")
             }
-            
+
             checkHitApple(gameCell);
         }
     }
 }
 
-    function game() {
+function game() {
 
-        placeApple();
-        getCoordinates();
-        controls();
+    placeApple();
+    getCoordinates();
+    controls();
 
-    }
+}
 
 
 game();

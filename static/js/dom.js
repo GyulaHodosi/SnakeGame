@@ -73,14 +73,18 @@ function getCoordinates(snakeAdd, snakeDel) {
     for (let gameCell of gameBoard) {
         let cordY = parseInt(gameCell.dataset.coordinateY);
         let cordX = parseInt(gameCell.dataset.coordinateX);
-        let cordCell = {x: cordX, y: cordY}
+        let cordCell = {x: cordX, y: cordY};
+
         gameCell.textContent = cordY + ',' + cordX;
+
         if (cordX === snakeAdd.x && cordY === snakeAdd.y) {
             gameCell.classList.add("snake")
         }
+
         if (cordX === snakeDel.x && cordY === snakeDel.y){
             gameCell.classList.remove("snake")
         }
+
         checkHitApple(gameCell);
     }
 }

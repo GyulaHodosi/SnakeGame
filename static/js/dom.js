@@ -7,6 +7,7 @@ var moveRight;
 var moveLeft;
 var moveUp;
 var moveDown;
+var isPaused = true;
 
 function showScore() {
     let scoreCurrent = document.getElementById("score");
@@ -72,6 +73,8 @@ function controls() {
                 if (direction === 'right') {
                     break;
                 }
+                hidePauseModal();
+                isPaused = false;
                 stopMovement();
                 direction = 'left';
                 changeDelCoordinates();
@@ -83,6 +86,8 @@ function controls() {
                 if (direction === 'down') {
                     break;
                 }
+                hidePauseModal();
+                isPaused = false;
                 stopMovement();
                 direction = 'up';
                 changeDelCoordinates();
@@ -94,6 +99,8 @@ function controls() {
                 if (direction === 'left') {
                     break;
                 }
+                hidePauseModal();
+                isPaused = false;
                 stopMovement();
                 direction = 'right';
                 changeDelCoordinates();
@@ -105,6 +112,8 @@ function controls() {
                 if (direction === 'up') {
                     break;
                 }
+                hidePauseModal();
+                isPaused = false;
                 stopMovement();
                 direction = 'down';
                 changeDelCoordinates();
@@ -113,7 +122,11 @@ function controls() {
                 break;
 
             case arrowKeys.space:
-                stopMovement();
+                if (isPaused === false) {
+                    isPaused = true;
+                    stopMovement();
+                    showPauseModal();
+                }
         }
     };
 }
@@ -181,8 +194,19 @@ function getCoordinates() {
     }
 }
 
+function showPauseModal() {
+    var modal = document.getElementById("pauseModal");
+    modal.style.display = "block";
+}
+
+function hidePauseModal() {
+    var modal = document.getElementById("pauseModal");
+    modal.style.display = "none";
+}
+
 function game() {
 
+    showPauseModal();
     placeApple();
     getCoordinates();
     controls();

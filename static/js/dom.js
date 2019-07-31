@@ -1,23 +1,32 @@
-function checkHitApple(gameCell, direction, snake, snakeDel) {
+// global variables for session
+let snakeAdd = [{x: 17, y: 9}];
+let snakeDel = [{x: 16, y: 8}];
+let direction = '';
+var moveRight;
+var moveLeft;
+var moveUp;
+var moveDown;
+
+function checkHitApple(gameCell) {
     if (gameCell.classList.contains("snake") && gameCell.classList.contains("apple")) {
         gameCell.classList.remove("apple");
-        increaseSnakeLength(snake, snakeDel, direction);
+        increaseSnakeLength();
 
         placeApple()
     }
 }
 
 
-function increaseSnakeLength(snake, snakeDel, direction) {
-    let snakeLastElement = snake[snake.length - 1];
+function increaseSnakeLength() {
+    let snakeLastElement = snakeAdd[snakeAdd.length - 1];
     if (direction === 'left'){
-        snake.push({x: snakeLastElement.x + 1, y: snakeLastElement.y});
+        snakeAdd.push({x: snakeLastElement.x + 1, y: snakeLastElement.y});
     } else if (direction === 'up'){
-        snake.push({x: snakeLastElement.x, y: snakeLastElement.y + 1});
+        snakeAdd.push({x: snakeLastElement.x, y: snakeLastElement.y + 1});
     } else if (direction === 'right'){
-        snake.push({x: snakeLastElement.x -1, y: snakeLastElement.y});
+        snakeAdd.push({x: snakeLastElement.x -1, y: snakeLastElement.y});
     } else {
-        snake.push({x: snakeLastElement.x, y: snakeLastElement.y -1});
+        snakeAdd.push({x: snakeLastElement.x, y: snakeLastElement.y -1});
     }
     snakeDel.push({x: 0, y: 0});
 }
@@ -38,111 +47,150 @@ function placeApple() {
 }
 
 
-function controls(snakeAdd, snakeDel, direction) {
+function controls() {
 
     let arrowKeys = {
         left: 37,
         up: 38,
         right: 39,
-        down: 40
+        down: 40,
+        space: 32
     };
 
     document.onkeydown = function () {
 
         switch (window.event.keyCode) {
+
             case arrowKeys.left:
+                clearInterval(moveRight);
+                clearInterval(moveLeft);
+                clearInterval(moveDown);
+                clearInterval(moveUp);
                 if (direction === 'right'){
                     break;
                 }
                 direction = 'left';
-                snakeDel = changeDelCoordinates(snakeAdd,snakeDel);
-                snakeAdd = changeSnakeCoordinates(snakeAdd, direction);
-                getCoordinates(snakeAdd, snakeDel, direction);
+                changeDelCoordinates();
+                moveLeft = setInterval(changeSnakeCoordinates, 100);
+                setInterval(changeDelCoordinates, 100);
                 break;
+
             case arrowKeys.up:
+                clearInterval(moveRight);
+                clearInterval(moveLeft);
+                clearInterval(moveDown);
+                clearInterval(moveUp);
                 if (direction === 'down'){
                     break;
                 }
                 direction = 'up';
-                snakeDel = changeDelCoordinates(snakeAdd,snakeDel);
-                snakeAdd = changeSnakeCoordinates(snakeAdd, 'up');
-                getCoordinates(snakeAdd, snakeDel, direction);
+                changeDelCoordinates();
+                moveUp = setInterval(changeSnakeCoordinates, 100);
+                setInterval(changeDelCoordinates, 100);
                 break;
+                
             case arrowKeys.right:
+                clearInterval(moveRight);
+                clearInterval(moveLeft);
+                clearInterval(moveDown);
+                clearInterval(moveUp);
                 if (direction === 'left'){
                     break;
                 }
                 direction = 'right';
-                snakeDel = changeDelCoordinates(snakeAdd,snakeDel);
-                snakeAdd = changeSnakeCoordinates(snakeAdd, 'right');
-                getCoordinates(snakeAdd, snakeDel, direction);
+                changeDelCoordinates();
+                moveRight = setInterval(changeSnakeCoordinates, 100);
+                setInterval(changeDelCoordinates, 100);
                 break;
+                
             case arrowKeys.down:
+                clearInterval(moveRight);
+                clearInterval(moveLeft);
+                clearInterval(moveDown);
+                clearInterval(moveUp);
                 if (direction === 'up'){
                     break;
                 }
                 direction = 'down';
-                snakeDel = changeDelCoordinates(snakeAdd,snakeDel);
-                snakeAdd = changeSnakeCoordinates(snakeAdd, 'down');
-                getCoordinates(snakeAdd, snakeDel, direction);
+                changeDelCoordinates();
+                moveDown = setInterval(changeSnakeCoordinates, 100);
+                setInterval(changeDelCoordinates, 100);
                 break;
+                
+            case arrowKeys.space:
+                clearInterval(moveRight);
+                clearInterval(moveLeft);
+                clearInterval(moveDown);
+                clearInterval(moveUp);
         }
     };
 }
 
 
-function changeSnakeCoordinates(snake, direction){
-    let snakeFirstElement = snake[0];
+function changeSnakeCoordinates(){
+    let snakeFirstElement = snakeAdd[0];
+    console.log(snakeFirstElement)
     if (direction === 'left'){
-        snake.unshift({x: snakeFirstElement.x -1, y: snakeFirstElement.y});
+        snakeAdd.unshift({x: snakeFirstElement.x -1, y: snakeFirstElement.y});
     } else if (direction === 'up'){
-        snake.unshift({x: snakeFirstElement.x, y: snakeFirstElement.y -1});
+        snakeAdd.unshift({x: snakeFirstElement.x, y: snakeFirstElement.y -1});
     } else if (direction === 'right'){
-        snake.unshift({x: snakeFirstElement.x + 1, y: snakeFirstElement.y});
+        snakeAdd.unshift({x: snakeFirstElement.x + 1, y: snakeFirstElement.y});
     } else {
-        snake.unshift({x: snakeFirstElement.x, y: snakeFirstElement.y + 1});
+        snakeAdd.unshift({x: snakeFirstElement.x, y: snakeFirstElement.y + 1});
     }
-    snake.pop();
-    return snake;
+    snakeAdd.pop();
+    getCoordinates();
 }
 
-function changeDelCoordinates(snake, snakeDel) {
-    for (let coordIdx = 0; coordIdx < snake.length; coordIdx ++){
-        snakeDel[coordIdx].x = snake[coordIdx].x;
-        snakeDel[coordIdx].y = snake[coordIdx].y;
+function changeDelCoordinates() {
+    for (let coordIdx = 0; coordIdx < snakeAdd.length; coordIdx ++){
+        snakeDel[coordIdx].x = snakeAdd[coordIdx].x;
+        snakeDel[coordIdx].y = snakeAdd[coordIdx].y;
     }
-    return snakeDel;
 }
 
-function getCoordinates(snakeAdd, snakeDel, direction) {
+function getCoordinates() {
     let gameBoard = document.querySelectorAll('.board-cell');
 
     for (let gameCell of gameBoard) {
         let cordY = parseInt(gameCell.dataset.coordinateY);
         let cordX = parseInt(gameCell.dataset.coordinateX);
-        let cordCell = {x: cordX, y: cordY};
         gameCell.textContent = cordY + ',' + cordX;
-        for ( let coordIdx = 0; coordIdx < snakeAdd.length; coordIdx ++) {
+        
+        if (snakeAdd[0].x > 35) {
+            snakeAdd[0].x = 0;
+        }
+        if (snakeAdd[0].x < 0) {
+            snakeAdd[0].x = 35;
+        }
+        if (snakeAdd[0].y > 18) {
+            snakeAdd[0].y = 0;
+        }
+        if (snakeAdd[0].y < 0) {
+            snakeAdd[0].y = 18;
+        }
+        
+        for (let coordIdx = 0; coordIdx < snakeAdd.length; coordIdx++) {
             if (cordX === snakeAdd[coordIdx].x && cordY === snakeAdd[coordIdx].y) {
                 gameCell.classList.add("snake")
             }
             if (cordX === snakeDel[coordIdx].x && cordY === snakeDel[coordIdx].y) {
                 gameCell.classList.remove("snake")
             }
+            
+            checkHitApple(gameCell);
         }
-        checkHitApple(gameCell, direction, snakeAdd , snakeDel);
     }
 }
 
+    function game() {
 
-function game() {
-    let snakeAdd = [{x: 17, y: 9}, {x: 16, y: 9}];
-    let snakeDel = [{x: 16, y: 8}, {x: 0, y: 0}];
-    let direction = '';
-    let cordApple = placeApple();
-    controls(snakeAdd, snakeDel, direction);
-    getCoordinates(snakeAdd, snakeDel, direction);
-}
+        placeApple();
+        getCoordinates();
+        controls();
+
+    }
 
 
 game();

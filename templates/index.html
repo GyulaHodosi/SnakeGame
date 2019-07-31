@@ -16,6 +16,9 @@
                 <table style="width: 100%" class="table-striped">
                     <tr style="font-weight: bold; color: black">
                         <td align="center" valign="center">
+                            <p>#</p>
+                        </td>
+                        <td align="center" valign="center">
                             <p>Date</p>
                         </td>
                         <td align="center" valign="center">
@@ -26,17 +29,20 @@
                         </td>
                     </tr>
 
-                    {% for score in scores %}
+                    {% for i in range(scores|length) %}
 
                         <tr>
                             <td align="center" valign="center">
-                                {{ score[0] }}
+                                {{ i + 1 }}
                             </td>
                             <td align="center" valign="center">
-                                {{ score[1] }}
+                                {{ scores[i][0] }}
                             </td>
                             <td align="center" valign="center">
-                                {{ score[2] }}
+                                {{ scores[i][1] }}
+                            </td>
+                            <td align="center" valign="center">
+                                {{ scores[i][2] }}
                             </td>
                         </tr>
 
@@ -61,12 +67,10 @@
                 </div>
             </form>
 
-            <form action="/addScore" method="post">
+            <form action="/gameOver" method="post">
                 <div style="width: 80%; margin-top: 5px">
                     <button type="submit" class="btn btn-primary btn-block">Stuff</button>
                 </div>
-
-                <input type="hidden" name="name" value="Oradenes">
                 <input type="hidden" name="score" value="100">
             </form>
 

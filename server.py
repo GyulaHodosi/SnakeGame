@@ -20,6 +20,9 @@ def addScore():
 
     return redirect('/')
 
+@app.route('/gameOver', methods=['POST'])
+def gameOver():
+    return render_template('gameOver.html', score=request.form['score'])
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Snake</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<table align="center" valign="center" style="width: 50%; margin-top: 5%;">
+    <tr>
+        <td align="center" valign="center">
+            <h1 class="h1">Game Over</h1>
+            <h4 class="h4">Score: {{ score }}</h4>
+        </td>
+    </tr>
+    <tr>
+        <td align="center" valign="center">
+
+            <form action="/addScore" method="post">
+                <div style="width: 80%; margin-top: 5%">
+                    <input type="text" name="name" class="form-control" autocomplete="off"
+                           style="width: 100%; text-align: center" required minlength="3">
+                    <button type="submit" style="margin-top: 2%" class="btn btn-success btn-block">Submit Score</button>
+                </div>
+                <input type="hidden" name="score" value="{{ score }}">
+            </form>
+
+            <form action="/">
+                <div style="width: 80%; margin-top: 2%">
+                    <button type="submit" class="btn btn-primary btn-block">Back to Main Page
+                    </button>
+                </div>
+            </form>
+
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

@@ -2,16 +2,23 @@
 let snakeAdd = [{x: 17, y: 9}];
 let snakeDel = [{x: 16, y: 8}];
 let direction = '';
+var score = 0;
 var moveRight;
 var moveLeft;
 var moveUp;
 var moveDown;
 
+function showScore() {
+    let scoreCurrent = document.getElementById("score");
+    scoreCurrent.textContent = score;
+}
+
 function checkHitApple(gameCell) {
     if (gameCell.classList.contains("snake") && gameCell.classList.contains("apple")) {
         gameCell.classList.remove("apple");
+        score ++;
+        showScore();
         increaseSnakeLength();
-
         placeApple()
     }
 }
@@ -33,7 +40,7 @@ function increaseSnakeLength() {
 
 
 function placeApple() {
-    let cordAppleX = Math.floor(Math.random() * 36);
+    let cordAppleX = Math.floor(Math.random() * 21);
     let cordAppleY = Math.floor(Math.random() * 19);
     let gameBoard = document.querySelectorAll('.board-cell');
 
@@ -120,7 +127,6 @@ function stopMovement() {
 
 function changeSnakeCoordinates() {
     let snakeFirstElement = snakeAdd[0];
-    console.log(snakeFirstElement)
     if (direction === 'left') {
         snakeAdd.unshift({x: snakeFirstElement.x - 1, y: snakeFirstElement.y});
     } else if (direction === 'up') {
@@ -147,13 +153,13 @@ function getCoordinates() {
     for (let gameCell of gameBoard) {
         let cordY = parseInt(gameCell.dataset.coordinateY);
         let cordX = parseInt(gameCell.dataset.coordinateX);
-        gameCell.textContent = cordY + ',' + cordX;
+        //gameCell.textContent = cordY + ',' + cordX;
 
-        if (snakeAdd[0].x > 35) {
+        if (snakeAdd[0].x > 21) {
             snakeAdd[0].x = 0;
         }
         if (snakeAdd[0].x < 0) {
-            snakeAdd[0].x = 35;
+            snakeAdd[0].x = 21;
         }
         if (snakeAdd[0].y > 18) {
             snakeAdd[0].y = 0;
@@ -164,7 +170,7 @@ function getCoordinates() {
 
         for (let coordIdx = 0; coordIdx < snakeAdd.length; coordIdx++) {
             if (cordX === snakeAdd[coordIdx].x && cordY === snakeAdd[coordIdx].y) {
-                gameCell.classList.add("snake")
+                gameCell.classList.add("snake");
             }
             if (cordX === snakeDel[coordIdx].x && cordY === snakeDel[coordIdx].y) {
                 gameCell.classList.remove("snake")

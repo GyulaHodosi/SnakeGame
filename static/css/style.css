@@ -5,7 +5,9 @@
     vertical-align: middle;
 }
 
-.game-board {
+.container {
+
+    width: 1102px;
     border: 1px solid black;
     background-color: #78C2AD;
 }
@@ -16,9 +18,24 @@ body {
 
 .snake {
     background-color: #856b36;
+    border: 1px solid black;
+    border-radius: 10%;
 }
 
 .apple {
-    background-color: #ec5d63;
-    border-radius: 100%;
+    background-image: url("apple.png");
+    background-position: center;
+    background-size: cover;
+
+}
+
+.score {
+    float: left;
+    display: block;
+    width: 100px;
+    background-color: #78C2AD;
+    color: red;
+    border: 1px solid black;
+    text-align: center;
+    font-size: xx-large;
 }

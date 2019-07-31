@@ -8,11 +8,12 @@
     <script src="{{ url_for('static', filename='js/dom.js') }}" defer></script>
 </head>
 <body>
-    <div class="game-board">
+    <div id="score" class="score">0</div>
+    <div class="container">
         {% for row in range(19) %}
         <div class="row">
 
-            {% for col in range(36) %}
+            {% for col in range(22) %}
             <div>
                 <div class="board-cell"
                     data-coordinate-x="{{ col }}"

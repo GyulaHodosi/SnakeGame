@@ -7,6 +7,71 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-<button><a href="/game">Play!</a></button>
+<table style="width: 90%; margin-top: 4%" align="center">
+    <tr>
+        <td style="width: 50%" align="center" valign="center">
+
+            {% if scores != None %}
+
+                <table style="width: 100%" class="table-striped">
+                    <tr style="font-weight: bold; color: black">
+                        <td align="center" valign="center">
+                            <p>Date</p>
+                        </td>
+                        <td align="center" valign="center">
+                            <p>Name</p>
+                        </td>
+                        <td align="center" valign="center">
+                            <p>Score</p>
+                        </td>
+                    </tr>
+
+                    {% for score in scores %}
+
+                        <tr>
+                            <td align="center" valign="center">
+                                {{ score[0] }}
+                            </td>
+                            <td align="center" valign="center">
+                                {{ score[1] }}
+                            </td>
+                            <td align="center" valign="center">
+                                {{ score[2] }}
+                            </td>
+                        </tr>
+
+                    {% endfor %}
+
+                </table>
+
+            {% else %}
+
+                <h1 class="h1" align="center">There is no highscores yet!</h1>
+
+            {% endif %}
+
+        </td>
+        <td style="width: 50%" align="center" valign="top">
+
+            <h1 class="h1" style="margin-top: 3%">Snake</h1>
+
+            <form action="/game">
+                <div style="width: 80%">
+                    <button type="submit" class="btn btn-primary btn-block">Play!</button>
+                </div>
+            </form>
+
+            <form action="/addScore" method="post">
+                <div style="width: 80%; margin-top: 5px">
+                    <button type="submit" class="btn btn-primary btn-block">Stuff</button>
+                </div>
+
+                <input type="hidden" name="name" value="Oradenes">
+                <input type="hidden" name="score" value="100">
+            </form>
+
+        </td>
+    </tr>
+</table>
 </body>
 </html>

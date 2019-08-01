@@ -54,11 +54,11 @@ function getEmptyCells() {
 }
 
 function placeBoost() {
-    let cordAppleX = Math.floor(Math.random() * 21);
-    let cordAppleY = Math.floor(Math.random() * 19);
+    let emptyCells = getEmptyCells();
+    let rndEmptyCell = emptyCells[Math.floor(Math.random() * emptyCells.length)];
 
-    getGameCell(cordAppleX, cordAppleY).classList.add("boost");
-    setTimeout(removeBoost, 3000, cordAppleX, cordAppleY);
+    getGameCell(rndEmptyCell[0].x, rndEmptyCell[0].y).classList.add("boost");
+    setTimeout(removeBoost, 3000, rndEmptyCell[0].x, rndEmptyCell[0].y);
 }
 
 function controls() {

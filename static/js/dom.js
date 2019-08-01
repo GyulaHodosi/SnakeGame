@@ -1,56 +1,29 @@
 // global variables for session
-let snakeAdd = [{x: 17, y: 9}];
-let snakeDel = [{x: 16, y: 8}];
+let snake = [{x: 17, y: 9}];
 let direction = '';
-var moveRight;
-var moveLeft;
-var moveUp;
-var moveDown;
+var intVal;
 var isPaused = true;
+var score = 0;
 
 function checkHitApple(gameCell) {
-    if (gameCell.classList.contains("snake") && gameCell.classList.contains("apple")) {
-        gameCell.classList.remove("apple");
-        increaseSnakeLength();
+    if (headCell.classList.contains("apple")) {
+        headCell.classList.remove("apple");
 
-        placeApple()
+        return true
     }
+    return false
 }
-
-
-function increaseSnakeLength() {
-    let snakeLastElement = snakeAdd[snakeAdd.length - 1];
-    if (direction === 'left') {
-        snakeAdd.push({x: snakeLastElement.x + 1, y: snakeLastElement.y});
-    } else if (direction === 'up') {
-        snakeAdd.push({x: snakeLastElement.x, y: snakeLastElement.y + 1});
-    } else if (direction === 'right') {
-        snakeAdd.push({x: snakeLastElement.x - 1, y: snakeLastElement.y});
-    } else {
-        snakeAdd.push({x: snakeLastElement.x, y: snakeLastElement.y - 1});
-    }
-    snakeDel.push({x: 0, y: 0});
-}
-
 
 function placeApple() {
-    let cordAppleX = Math.floor(Math.random() * 36);
+    let cordAppleX = Math.floor(Math.random() * 21);
     let cordAppleY = Math.floor(Math.random() * 19);
-    let gameBoard = document.querySelectorAll('.board-cell');
 
-    for (let gameCell of gameBoard) {
-        let cordY = parseInt(gameCell.dataset.coordinateY);
-        let cordX = parseInt(gameCell.dataset.coordinateX);
-        if (cordY === cordAppleY && cordX === cordAppleX) {
-            gameCell.classList.add("apple")
-        }
-    }
+    getGameCell(cordAppleX, cordAppleY).classList.add("apple")
 }
-
 
 function controls() {
 
-    let arrowKeys = {
+    let keys = {
         left: 37,
         up: 38,
         right: 39,
@@ -60,130 +33,116 @@ function controls() {
 
     document.onkeydown = function () {
 
+        if (window.event.keyCode !== keys.space && isPaused === true) {
+            hidePauseModal();
+            isPaused = false;
+        }
+
         switch (window.event.keyCode) {
 
-            case arrowKeys.left:
+            case keys.left:
                 if (direction === 'right') {
                     break;
                 }
-                hidePauseModal();
-                isPaused = false;
-                stopMovement();
+                clearInterval(intVal);
                 direction = 'left';
-                changeDelCoordinates();
-                moveLeft = setInterval(changeSnakeCoordinates, 100);
-                setInterval(changeDelCoordinates, 100);
+                intVal = setInterval(changeSnakeCoordinates, 100);
                 break;
 
-            case arrowKeys.up:
+            case keys.up:
                 if (direction === 'down') {
                     break;
                 }
-                hidePauseModal();
-                isPaused = false;
-                stopMovement();
+                clearInterval(intVal);
                 direction = 'up';
-                changeDelCoordinates();
-                moveUp = setInterval(changeSnakeCoordinates, 100);
-                setInterval(changeDelCoordinates, 100);
+                intVal = setInterval(changeSnakeCoordinates, 100);
                 break;
 
-            case arrowKeys.right:
+            case keys.right:
                 if (direction === 'left') {
                     break;
                 }
-                hidePauseModal();
-                isPaused = false;
-                stopMovement();
+                clearInterval(intVal);
                 direction = 'right';
-                changeDelCoordinates();
-                moveRight = setInterval(changeSnakeCoordinates, 100);
-                setInterval(changeDelCoordinates, 100);
+                intVal = setInterval(changeSnakeCoordinates, 100);
                 break;
 
-            case arrowKeys.down:
+            case keys.down:
                 if (direction === 'up') {
                     break;
                 }
-                hidePauseModal();
-                isPaused = false;
-                stopMovement();
+                clearInterval(intVal);
                 direction = 'down';
-                changeDelCoordinates();
-                moveDown = setInterval(changeSnakeCoordinates, 100);
-                setInterval(changeDelCoordinates, 100);
+                intVal = setInterval(changeSnakeCoordinates, 100);
                 break;
 
-            case arrowKeys.space:
+            case keys.space:
                 if (isPaused === false) {
                     isPaused = true;
-                    stopMovement();
+                    clearInterval(intVal);
                     showPauseModal();
                 }
         }
     };
 }
 
-function stopMovement() {
-    clearInterval(moveRight);
-    clearInterval(moveLeft);
-    clearInterval(moveDown);
-    clearInterval(moveUp);
-}
-
 function changeSnakeCoordinates() {
-    let snakeFirstElement = snakeAdd[0];
-    console.log(snakeFirstElement)
-    if (direction === 'left') {
-        snakeAdd.unshift({x: snakeFirstElement.x - 1, y: snakeFirstElement.y});
-    } else if (direction === 'up') {
-        snakeAdd.unshift({x: snakeFirstElement.x, y: snakeFirstElement.y - 1});
-    } else if (direction === 'right') {
-        snakeAdd.unshift({x: snakeFirstElement.x + 1, y: snakeFirstElement.y});
+    getNewCoords();
+    sideTransition();
+    headCell = getGameCell(snake[0].x, snake[0].y);
+    checkSelfHit(headCell);
+
+    if (checkHitApple(headCell) === false) {
+        getGameCell(snake[snake.length - 1].x, snake[snake.length - 1].y).classList.remove("snake");
+        snake.pop();
     } else {
-        snakeAdd.unshift({x: snakeFirstElement.x, y: snakeFirstElement.y + 1});
+        score++;
+        placeApple();
     }
-    snakeAdd.pop();
-    getCoordinates();
+
+    headCell.classList.add('snake');
 }
 
-function changeDelCoordinates() {
-    for (let coordIdx = 0; coordIdx < snakeAdd.length; coordIdx++) {
-        snakeDel[coordIdx].x = snakeAdd[coordIdx].x;
-        snakeDel[coordIdx].y = snakeAdd[coordIdx].y;
+function getNewCoords() {
+    if (direction === 'left') {
+        snake.unshift({x: snake[0].x - 1, y: snake[0].y});
+    } else if (direction === 'up') {
+        snake.unshift({x: snake[0].x, y: snake[0].y - 1});
+    } else if (direction === 'right') {
+        snake.unshift({x: snake[0].x + 1, y: snake[0].y});
+    } else {
+        snake.unshift({x: snake[0].x, y: snake[0].y + 1});
     }
 }
 
-function getCoordinates() {
+function sideTransition() {
+    if (snake[0].x > 21) {
+        snake[0].x = 0;
+    }
+    if (snake[0].x < 0) {
+        snake[0].x = 21;
+    }
+    if (snake[0].y > 18) {
+        snake[0].y = 0;
+    }
+    if (snake[0].y < 0) {
+        snake[0].y = 18;
+    }
+}
+
+function checkSelfHit(gameCell) {
+    if (gameCell.classList.contains('snake')) {
+        post('/gameOver', {score: score})
+    }
+}
+
+function getGameCell(x, y) {
     let gameBoard = document.querySelectorAll('.board-cell');
 
     for (let gameCell of gameBoard) {
-        let cordY = parseInt(gameCell.dataset.coordinateY);
-        let cordX = parseInt(gameCell.dataset.coordinateX);
-        gameCell.textContent = cordY + ',' + cordX;
-
-        if (snakeAdd[0].x > 35) {
-            snakeAdd[0].x = 0;
-        }
-        if (snakeAdd[0].x < 0) {
-            snakeAdd[0].x = 35;
-        }
-        if (snakeAdd[0].y > 18) {
-            snakeAdd[0].y = 0;
-        }
-        if (snakeAdd[0].y < 0) {
-            snakeAdd[0].y = 18;
-        }
-
-        for (let coordIdx = 0; coordIdx < snakeAdd.length; coordIdx++) {
-            if (cordX === snakeAdd[coordIdx].x && cordY === snakeAdd[coordIdx].y) {
-                gameCell.classList.add("snake")
-            }
-            if (cordX === snakeDel[coordIdx].x && cordY === snakeDel[coordIdx].y) {
-                gameCell.classList.remove("snake")
-            }
-
-            checkHitApple(gameCell);
+        if (parseInt(gameCell.dataset.coordinateY) === y &&
+            parseInt(gameCell.dataset.coordinateX) === x) {
+            return gameCell
         }
     }
 }
@@ -202,10 +161,29 @@ function game() {
 
     showPauseModal();
     placeApple();
-    getCoordinates();
+    getGameCell(snake[0].x, snake[0].y).classList.add('snake');
     controls();
-
 }
 
+function post(path, params, method = 'post') {
+
+    const form = document.createElement('form');
+    form.method = method;
+    form.action = path;
+
+    for (const key in params) {
+        if (params.hasOwnProperty(key)) {
+            const hiddenField = document.createElement('input');
+            hiddenField.type = 'hidden';
+            hiddenField.name = key;
+            hiddenField.value = params[key];
+
+            form.appendChild(hiddenField);
+        }
+    }
+
+    document.body.appendChild(form);
+    form.submit();
+}
 
 game();

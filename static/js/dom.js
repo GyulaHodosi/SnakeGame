@@ -20,10 +20,23 @@ function checkHitApple(gameCell) {
 }
 
 function placeApple() {
-    let cordAppleX = Math.floor(Math.random() * 21);
-    let cordAppleY = Math.floor(Math.random() * 19);
+    let emptyCells = getEmptyCells();
+    let rndEmptyCell = emptyCells[Math.floor(Math.random() * emptyCells.length)];
 
-    getGameCell(cordAppleX, cordAppleY).classList.add("apple")
+    getGameCell(rndEmptyCell[0].x, rndEmptyCell[0].y).classList.add("apple");
+}
+
+function getEmptyCells() {
+    let gameBoard = document.querySelectorAll('.board-cell');
+    let result = [];
+
+    for (let gameCell of gameBoard) {
+        if (gameCell.classList.contains('snake') === false) {
+
+            result.push([{x: parseInt(gameCell.dataset.coordinateX), y: parseInt(gameCell.dataset.coordinateY)}]);
+        }
+    }
+    return result
 }
 
 function controls() {

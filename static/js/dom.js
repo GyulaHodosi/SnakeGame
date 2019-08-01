@@ -37,7 +37,12 @@ function placeApple() {
     let emptyCells = getEmptyCells();
     let rndEmptyCell = emptyCells[Math.floor(Math.random() * emptyCells.length)];
 
-    getGameCell(rndEmptyCell[0].x, rndEmptyCell[0].y).classList.add("apple");
+    try {
+        getGameCell(rndEmptyCell[0].x, rndEmptyCell[0].y).classList.add("apple");
+    } catch (e) {
+       let gameOver = document.getElementById("game-over");
+       gameOver.textContent = "You beat the game!"
+    }
 }
 
 function getEmptyCells() {

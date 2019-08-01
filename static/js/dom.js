@@ -158,6 +158,7 @@ function changeSnakeCoordinates() {
     }
 
     headCell.classList.add('snake');
+    stepped = true;
 }
 
 function getNewCoords() {

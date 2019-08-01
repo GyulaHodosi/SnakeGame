@@ -4,6 +4,12 @@ let direction = '';
 var intVal;
 var isPaused = true;
 var score = 0;
+var appleCounter = 0;
+
+function removeBoost(cordAppleX, cordAppleY) {
+    getGameCell(cordAppleX, cordAppleY).classList.remove("boost");
+    appleCounter = 0;
+}
 
 function showScore() {
     let scoreCurrent = document.getElementById("score");
@@ -18,12 +24,28 @@ function checkHitApple(gameCell) {
     }
     return false
 }
+function checkHitBoost(gameCell) {
+    if (gameCell.classList.contains("boost")) {
+        gameCell.classList.remove("boost");
+
+        return true
+    }
+    return false
+}
 
 function placeApple() {
     let cordAppleX = Math.floor(Math.random() * 21);
     let cordAppleY = Math.floor(Math.random() * 19);
 
     getGameCell(cordAppleX, cordAppleY).classList.add("apple")
+}
+
+function placeBoost() {
+    let cordAppleX = Math.floor(Math.random() * 21);
+    let cordAppleY = Math.floor(Math.random() * 19);
+
+    getGameCell(cordAppleX, cordAppleY).classList.add("boost");
+    setTimeout(removeBoost, 3000, cordAppleX, cordAppleY);
 }
 
 function controls() {
@@ -97,14 +119,26 @@ function changeSnakeCoordinates() {
     headCell = getGameCell(snake[0].x, snake[0].y);
     checkSelfHit(headCell);
 
+    if (checkHitBoost(headCell)) {
+        score += 3;
+        appleCounter = 0;
+        showScore()
+    }
+
     if (checkHitApple(headCell) === false) {
         getGameCell(snake[snake.length - 1].x, snake[snake.length - 1].y).classList.remove("snake");
         snake.pop();
     } else {
         score++;
+        appleCounter++;
         showScore();
+        if (appleCounter % 5 === 0 && appleCounter !== 0) {
+        placeBoost()
+        }
         placeApple();
     }
+
+
 
     headCell.classList.add('snake');
 }

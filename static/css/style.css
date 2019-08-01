@@ -39,3 +39,9 @@ body {
     text-align: center;
     font-size: xx-large;
 }
+
+.boost {
+    background-image: url("mouse.png");
+    background-position: center;
+    background-size: cover;
+}

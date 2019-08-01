@@ -5,9 +5,14 @@ var intVal;
 var isPaused = true;
 var score = 0;
 
+function showScore() {
+    let scoreCurrent = document.getElementById("score");
+    scoreCurrent.textContent = score;
+}
+
 function checkHitApple(gameCell) {
-    if (headCell.classList.contains("apple")) {
-        headCell.classList.remove("apple");
+    if (gameCell.classList.contains("apple")) {
+        gameCell.classList.remove("apple");
 
         return true
     }
@@ -97,6 +102,7 @@ function changeSnakeCoordinates() {
         snake.pop();
     } else {
         score++;
+        showScore();
         placeApple();
     }
 

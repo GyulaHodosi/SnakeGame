@@ -4,6 +4,7 @@ let direction = '';
 var intVal;
 var isPaused = true;
 var score = 0;
+var stepped = true;
 
 function showScore() {
     let scoreCurrent = document.getElementById("score");
@@ -50,56 +51,59 @@ function controls() {
     };
 
     document.onkeydown = function () {
+        if (stepped === true) {
+            stepped = false;
 
-        if (window.event.keyCode !== keys.space && isPaused === true) {
-            hidePauseModal();
-            isPaused = false;
-        }
+            if (window.event.keyCode !== keys.space && isPaused === true) {
+                hidePauseModal();
+                isPaused = false;
+            }
 
-        switch (window.event.keyCode) {
+            switch (window.event.keyCode) {
 
-            case keys.left:
-                if (direction === 'right') {
-                    break;
-                }
-                clearInterval(intVal);
-                direction = 'left';
-                intVal = setInterval(changeSnakeCoordinates, 100);
-                break;
-
-            case keys.up:
-                if (direction === 'down') {
-                    break;
-                }
-                clearInterval(intVal);
-                direction = 'up';
-                intVal = setInterval(changeSnakeCoordinates, 100);
-                break;
-
-            case keys.right:
-                if (direction === 'left') {
-                    break;
-                }
-                clearInterval(intVal);
-                direction = 'right';
-                intVal = setInterval(changeSnakeCoordinates, 100);
-                break;
-
-            case keys.down:
-                if (direction === 'up') {
-                    break;
-                }
-                clearInterval(intVal);
-                direction = 'down';
-                intVal = setInterval(changeSnakeCoordinates, 100);
-                break;
-
-            case keys.space:
-                if (isPaused === false) {
-                    isPaused = true;
+                case keys.left:
+                    if (direction === 'right') {
+                        break;
+                    }
                     clearInterval(intVal);
-                    showPauseModal();
-                }
+                    direction = 'left';
+                    intVal = setInterval(changeSnakeCoordinates, 100);
+                    break;
+
+                case keys.up:
+                    if (direction === 'down') {
+                        break;
+                    }
+                    clearInterval(intVal);
+                    direction = 'up';
+                    intVal = setInterval(changeSnakeCoordinates, 100);
+                    break;
+
+                case keys.right:
+                    if (direction === 'left') {
+                        break;
+                    }
+                    clearInterval(intVal);
+                    direction = 'right';
+                    intVal = setInterval(changeSnakeCoordinates, 100);
+                    break;
+
+                case keys.down:
+                    if (direction === 'up') {
+                        break;
+                    }
+                    clearInterval(intVal);
+                    direction = 'down';
+                    intVal = setInterval(changeSnakeCoordinates, 100);
+                    break;
+
+                case keys.space:
+                    if (isPaused === false) {
+                        isPaused = true;
+                        clearInterval(intVal);
+                        showPauseModal();
+                    }
+            }
         }
     };
 }
@@ -120,6 +124,7 @@ function changeSnakeCoordinates() {
     }
 
     headCell.classList.add('snake');
+    stepped = true;
 }
 
 function getNewCoords() {
